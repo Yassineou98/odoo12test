@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="helpdesk_type_search" model="ir.ui.view">
+            <field name="name">Motif - Search</field>
+            <field name="model">motifs</field>
+            <field name="arch" type="xml">
+                <search string="Motif Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="helpdesk_motif_form_view" model="ir.ui.view">
+            <field name="name">helpdesk_lite.motif.form</field>
+            <field name="model">motifs</field>
+            <field name="arch" type="xml">
+                <form string="Motif">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1 name="header_type">
+                                <field name="name" placeholder="Motif name..."/>
+                            </h1>
+                            <h3 name="header_categories">
+                                <field name="category_ids"
+                                       placeholder="Type..."/>
+                            </h3>
+                        </div>
+                        <notebook>
+                            <page string="Description" name="page_description">
+
+                                <group>
+                                    <field name="default_priority"
+                                           widget="priority"
+                                    />
+                                </group>
+
+                                <separator colspan="4" string="Description"/>
+                                <field colspan="4" name="description"
+                                       nolabel="1" select="2" placeholder="Description..."/>
+                            </page>
+                            <page string="Help" name="page_help">
+                                <field colspan="4" name="help_html"/>
+                            </page>
+                            <page string="Note" name="page_note">
+                                <field colspan="4" name="note_html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_motif_tree_view" model="ir.ui.view">
+            <field name="name">helpdesk_lite.motif.tree</field>
+            <field name="model">motifs</field>
+            <field name="arch" type="xml">
+                <tree string="Motif">
+                    <field name="name"/>
+                    <field name="category_ids"/>
+                    <field name="default_priority" widget="priority"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+<record id="helpdesk_type_view_dashboard" model="ir.ui.view">
+        <field name="name">helpdesk.category.dashboard</field>
+        <field name="model">motifs</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_request_dashboard_kanban">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="category_ids"/>
+                <templates>
+                     <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_request_dashboard_kanban">
+                            <div class="o_request_dashboard_kanban_main">
+                                <div class="o_request_dashboard_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span class="field-with-icon">
+                                            <span class="field-icon fa fa-hashtag oe_inline"/>
+                                                  <t t-esc="record.name.raw_value"/>
+                                            </span>
+                                            <field name="default_priority" widget="priority"/>
+                                        </div>
+
+                                    </div>
+                                         <span class="o_kanban_record_subtitle" t-if="record.category_ids.raw_value">
+                                                    <field name="category_ids"/>
+                                      </span>
+                                       <div t-if="record.description.raw_value">
+                                            <span><t t-esc="record.description.raw_value"/></span>
+                                        </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+        <record id="helpdesk_motif_act_window" model="ir.actions.act_window">
+            <field name="name">Motifs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">motifs</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new ModelTitle.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+                id="menu_helpdesk_motif_act"
+                name="Motifs"
+                sequence="40"
+                action="helpdesk_motif_act_window"
+                parent="menu_config"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ <data>
+     <record id="helpdesk_type_search" model="ir.ui.view">
+        <field name="name">type - Search</field>
+        <field name="model">type</field>
+        <field name="arch" type="xml">
+            <search string="Type Search">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="request_category_view_dashboard" model="ir.ui.view">
+        <field name="name">request.category.dashboard</field>
+        <field name="model">type</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_request_dashboard_kanban">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="request_type_ids"/>
+
+                <templates>
+                     <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_request_dashboard_kanban">
+                            <div class="o_request_dashboard_kanban_main">
+                                <div class="o_request_dashboard_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                             <span class="field-with-icon">
+                                                 <span class="field-icon fa fa-exclamation-triangle oe_inline"/>
+                                                   <t t-esc="record.name.raw_value"/></span>
+                                        </div>
+                                        <xpath expr="/kanban/templates/t[@t-name='kanban-box']/div/div[@class='oe_kanban_content']/div[@style='padding-left: 0.5em']" position="after">
+
+                                        <div>
+
+                                             <field name="request_type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
+                                        </div>
+
+                                        </xpath>
+                                        <div t-if="record.code.raw_value" class="text-muted">
+                                            <span><t t-esc="record.code.raw_value"/></span>
+                                        </div>
+                                        <div t-if="record.description.raw_value">
+                                            <span><t t-esc="record.description.raw_value"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+        <record id="helpdesk_type_form_view" model="ir.ui.view">
+            <field name="name">helpdesk_lite.type.form</field>
+            <field name="model">type</field>
+            <field name="arch" type="xml">
+                <form string="Type">
+                    <sheet>
+                            <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                   placeholder="Name..."
+                                   class="oe_inline"/>
+                        </h1>
+                             </div>
+                        <notebook>
+                        <page string="Info" name="page_info">
+                            <group>
+                                <group>
+                                    <field name="request_type_ids" widget="many2many_tags"
+                                           placeholder="Motifs.."
+                                           options="{'no_create': true, 'no_quick_create': true}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description" name="page_description">
+                            <field name="description"
+                                   placeholder="Place type description here..."/>
+                        </page>
+
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_type_tree_view" model="ir.ui.view">
+            <field name="name">helpdesk_lite.type.tree</field>
+            <field name="model">type</field>
+            <field name="arch" type="xml">
+                <tree import="0" string="Type">
+                    <field name="name"/>
+                    <field name="request_type_ids"
+                       widget="many2many_tags"
+                       options="{'color_field': 'color'}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_type_act_window" model="ir.actions.act_window">
+            <field name="name">Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No type are available
+                </p><p>
+                Click to add types
+            </p>
+            </field>
+        </record>
+
+           <menuitem
+            id="menu_helpdesk_type_act"
+            name="Types"
+            sequence="30"
+            action="helpdesk_type_act_window"
+            parent="menu_config"
+            />
+    </data>
+</odoo>

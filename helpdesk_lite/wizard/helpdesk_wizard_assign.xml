@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="helpdesk_wizard_assign_form_view" model="ir.ui.view">
+        <field name="name">helpdesk.wizard.assign.form</field>
+        <field name="model">assign</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                      <group>
+                        <field name="user_id"/>
+                        <field name="partner_id"
+                               attrs="{'invisible': [('user_id', '=', False)]}"/>
+                    </group>
+                    <field name="comment"
+                           nolabel="1"
+                           colspan="4"
+                           placeholder="Comment..."/>
+                </sheet>
+                <footer>
+                    <button string="Assign" name="do_assign" class="btn-primary" type="object"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+   </record>
+   <record id="action_helpdesk_wizard_assign" model="ir.actions.act_window">
+       <field name="res_model">assign</field>
+       <field name="name">Assign user</field>
+       <field name="view_mode">form</field>
+       <field name="target">new</field>
+   </record>
+    </data>
+</odoo>

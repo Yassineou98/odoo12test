@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="helpdesk_service_form_view" model="ir.ui.view">
+            <field name="name">helpdesk.service.form</field>
+            <field name="model">service</field>
+            <field name="arch" type="xml">
+                <form string="Services">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Title" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="department_ids"/>
+                            </group>
+                        </group>
+                          <notebook>
+                            <page name="Groups" string="Groups">
+                                <field name="group_id" widget="many2many" options="{'not_delete': True}">
+                                    <kanban quick_create="false" create="true" delete="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_global_click" style="max-width: 200px">
+                                                    <div class="o_kanban_record_top">
+                                                        <div class="o_kanban_record_headings ml8">
+                                                            <strong class="o_kanban_record_title">
+                                                                <field name="name"/>
+                                                            </strong>
+                                                        </div>
+                                                        <a t-if="! read_only_mode" type="delete" class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_service_tree_view" model="ir.ui.view">
+            <field name="name">helpdesk.service.tree</field>
+            <field name="model">service</field>
+            <field name="arch" type="xml">
+                <tree string="ModelTitle">
+                    <field name="name"/>
+                    <field name="department_ids"/>
+                    <field name="group_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_service_search_view" model="ir.ui.view">
+            <field name="name">Department - Search</field>
+            <field name="model">service</field>
+            <field name="arch" type="xml">
+                <search string="Department Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="helpdesk_service_act_window" model="ir.actions.act_window">
+            <field name="name">Services</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">service</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Service.
+                </p>
+            </field>
+        </record>
+
+<menuitem
+                id="menu_helpdesk_service_act"
+                name="Services"
+                sequence="20"
+                action="helpdesk_service_act_window"
+                parent="menu_config"
+        />
+    </data>
+</odoo>

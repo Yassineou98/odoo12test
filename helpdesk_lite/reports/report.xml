@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+        id="report_tickets"
+        string="Tickets"
+        model="helpdesk_lite.ticket"
+        report_type="qweb-pdf"
+        name="om_hospital.appointment_report"
+        file="om_hospital.appointment_report"/>
+
+    </data>
+</odoo>

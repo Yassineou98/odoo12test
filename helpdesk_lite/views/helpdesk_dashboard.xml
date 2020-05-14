@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="act_ticket_stat" model="ir.actions.act_window">
+            <field name="name">Ticket Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">helpdesk_lite.ticket</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="helpdesk_lite.helpdesk_ticket_graph_view"/>
+        </record>
+
+        <record id="act_motif_stat" model="ir.actions.act_window">
+             <field name="name">Motif stat</field>
+             <field name="res_model">motifs</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+        <record id="dashboard_form_view" model="ir.ui.view">
+            <field name="name">Dashboard Form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard">
+                    <board style="1-2">
+                            <column>
+                                <action
+                                    string="Ticket Stat"
+                                    name="%(helpdesk_lite.act_ticket_stat)d"/>
+                                <action
+                                    string="Motif stat"
+                                    name="%(act_motif_stat)d"/>
+                            </column>
+                        <column>
+
+                        </column>
+                    </board>
+                </form>
+            </field>
+        </record>
+
+        <record id="dashboard_helpdesk_action" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="dashboard_form_view"/>
+        </record>
+
+              <menuitem
+                id="menu_helpdesk_dashboard_act"
+                name="Dashboard"
+                sequence="40"
+                action="dashboard_helpdesk_action"
+                parent="menu_config"
+        />
+    </data>
+</odoo>

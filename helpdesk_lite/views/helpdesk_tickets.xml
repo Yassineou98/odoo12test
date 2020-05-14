@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_form_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.form.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="takeit" type="object" string="Assign To me" class="oe_highlight" groups="helpdesk_lite.group_helpdesk_lite_manager"/>
+                    <button name="assignto" type="object" string="Assign" class="oe_highlight" groups="helpdesk_lite.group_helpdesk_lite_manager"/>
+                    <field name="stage_id" widget="statusbar" clickable="True"
+                           options="{'fold_field': 'fold'}" groups="helpdesk_lite.group_helpdesk_lite_manager"/>
+                </header>
+                <sheet string="Ticket">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="helpdesk_lite.group_helpdesk_lite_manager"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+
+                    <div name="title" class="oe_title request_title">
+                           <div>
+                                <span/>
+                                <field name="priority"
+                                       attrs="{'invisible': ['|','|', ('motif_id', '=', False), ('id', '!=', False), {'readonly': True}]}"
+                                       widget="priority"
+                                />
+                            </div>
+                    <div class="oe_title">
+                        <h2 name="header_name">
+                            <field name="name"/>
+                        </h2>
+                  <!--     <h3>
+                           <field name="name" placeholder="Ticket name..."
+                                       attrs="{'readonly': [('id', '!=', False)]}"
+                                       options="{'no_create': true, 'no_quick_create': true}"
+                                       class="oe_inline"/>
+                       </h3>-->
+                       <h3 name="header_category">
+                            <span class="field-with-icon">
+                                <span class="field-icon fa fa-exclamation-triangle oe_inline"
+                                      title="Type"
+                                      aria-label="Type"/>
+                                <field name="type_id" placeholder="Type..."
+                                       attrs="{'readonly': [('id', '!=', False)]}"
+                                       options="{'no_create': true, 'no_quick_create': true}"
+                                       class="oe_inline"/>
+                            </span>
+                        </h3>
+                        <h3 name="header_type">
+                            <span class="field-with-icon">
+                                <span class="field-icon fa fa-hashtag oe_inline"
+                                      title="Motif"
+                                      aria-label="Type"/>
+                                <field name="motif_id" placeholder="Motif..."
+                                       domain="[('category_ids', '=', type_id)]"
+                                       attrs="{'readonly': [('id', '!=', False)]}"
+                                       options="{'no_create': true, 'no_quick_create': true}"
+                                       class="oe_inline"/>
+                            </span>
+                        </h3>
+                    </div>
+                        </div>
+                    <notebook>
+                        <page string="Ticket">
+                            <field name="description_motif" attrs="{'invisible': ['|', ('description_motif', '=', False), ('id', '!=', False)]}"/>
+                            <field name="note_html" attrs="{'invisible': ['|', ('note_html', '=', False), ('id', '!=', False)]}"/>
+                            <div class="request-separator request-separator-info"
+                                 attrs="{'invisible': ['|', ('note_html', '=', False), ('description_motif', '=', False) ,('id', '!=', False)]}">
+                                <span class="request-separator-text">Info</span>
+                            </div>
+
+
+                            <group>
+                           <field name="partner_id" placeholder="Partner..."
+                                          attrs="{'readonly': True}"
+                                          options="{'no_create': true, 'no_quick_create': true}"/>
+                           <field name="created_by_id" placeholder="Author.."
+                                            attrs="{'readonly': True}"
+                                          options="{'no_create': true, 'no_quick_create': true}"/>
+                            </group>
+                                                   <div class="request-separator">
+                                <span class="request-separator-text">Request</span>
+                            </div>
+                            <field name="description"
+                                   widget="request_html"
+                                   placeholder="Add an internal note..."/>
+
+                        </page>
+                            <page string="Attachments">
+                            <group>
+                                <field name="attachment_ids">
+                                    <tree>
+                                        <field name="datas_fname"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Extra Info" name="extra_info">
+                            <group>
+                                <group>
+                                    <field name="id" groups="base.group_no_one"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                                <group>
+                                    <field name="legend_blocked" invisible="1"/>
+                                    <field name="legend_done" invisible="1"/>
+                                    <field name="legend_normal" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <div class="row mt8">
+                        <div class="col-md-3">
+                            <div><label for="date_created" string="Created"/></div>
+                            <div><field name="date_created"/></div>
+                            <div><field name="created_by_id"/></div>
+                        </div>
+                        <div class="col-md-3"
+                            attrs="{'invisible': ['|', ('date_moved', '=', False), ('moved_by_id', '=', False)]}">
+                            <div><label for="date_moved" string="Moved"/></div>
+                            <div><field name="date_moved"/></div>
+                            <div><field name="moved_by_id"/></div>
+                        </div>
+                        <div class="col-md-3">
+                                <span attrs="{'invisible': [('user_id', '=', False)]}">
+                                    <label for="date_assigned" string="Assigned To"/>
+                                </span>
+
+                            <div><field name="date_assigned"/></div>
+                            <div><field name="user_id"
+                                        attrs="{'invisible': ['|', ('user_id', '=', False), {'readonly': True}]}"/></div>
+                        </div>
+                        <div class="col-md-3"
+                             attrs="{'invisible': ['|', ('date_done', '=', False), ('closed_by_id', '=', False)]}">
+                            <div><label for="date_done" string="Closed"/></div>
+                            <div><field name="date_done"/></div>
+                            <div><field name="closed_by_id"/></div>
+                        </div>
+                    </div>
+
+
+
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_tree_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.tree.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Issue Tracker Tree" decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="priority" string="Priority" attrs="{'readonly': True}"/>
+                <field name="create_date" string="Created"/>
+                <field name="date_deadline"/>
+                <field name="date_done"/>
+                <field name="user_id"/>
+                <field name="stage_id" widget="selection" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_filter" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.search.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <search string="Ticket Search">
+                <field name="name" string="Ticket" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                <field name="id"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="user_id"/>
+                <field name="stage_id" domain="[]"/>
+                <filter string="My Tickets" name="my_tickets" domain="[('created_by_id','=',uid)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="Assigned to me" name="assignertome" domain="[('user_id', '=', uid)]"/>
+
+                <separator/>
+                <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By" >
+                    <filter string="Partner" name="partner" context="{'group_by':'commercial_partner_id'}" />
+                    <filter string="Assigned to" name="responsible" context="{'group_by':'user_id'}" />
+                    <filter string="Priority" name="priority" context="{'group_by':'priority'}" />
+                    <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Create Day" name="create" context="{'group_by':'create_date:day'}" help="Create Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--
+            <record id="helpdesk_ticket_calendar_view" model="ir.ui.view">
+                <field name="name">helpdesk_lite.ticket.calendar.view</field>
+                <field name="model">helpdesk_lite.ticket</field>
+                <field name="priority" eval="2"/>
+                <field name="arch" type="xml">
+                    <calendar string="Tickets" date_start="date" color="user_id" date_delay="duration">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                    </calendar>
+                </field>
+            </record>
+    -->
+
+
+    <!-- Helpdesk Karban View-->
+
+    <record id="helpdesk_ticket_kanban_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.kanban.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" class="o_kanban_small_column">
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                <field name="color"/>
+                <!--<field name="user_email"/>-->
+                <field name="user_id"/>
+                <field name="date_deadline"/>
+                <field name="message_needaction_counter"/>
+                <field name="active"/>
+                <field name="legend_blocked"/>
+                <field name="legend_done"/>
+                <field name="legend_normal"/>
+                <templates>
+                    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <li><b>Ticket:</b> </li>
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="edit">Edit ticket</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
+                             <div  name="header" class="o_request_kanban_header">
+                                <div name="title_box" class="o_header_title_box">
+                                    <div name="title" class="o_header_title o_header_box_item">
+                                        <span><field name="name"/></span>
+                                    </div>
+                                    <div class="o_header_box_item">
+                                        <field name="priority"
+                                               widget="priority"
+                                               attrs="{'readonly': True}"
+                                        />
+                                    </div>
+                                </div>
+
+
+                                  <div class="o_header_stage">
+                                    <span><field name="stage_id"/></span>
+                                </div>
+                            </div>
+                            <div class="o_request_kanban_content">
+                                <div class="o_request_kanban_info o_request_kanban_row">
+                                    <div name="type_category">
+                                        <div>
+                                            <span class="text-muted" title="Category">
+                                                <span class="field-icon fa fa-exclamation-triangle oe_inline"/>
+                                                    <field name="type_id"/>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted" title="Type">
+                                                <span class="fa fa-hashtag mr4"/>
+                                                <field name="motif_id"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                  <t t-if="record.user_id.raw_value">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left" groups="base.group_user">
+                                        <field name="kanban_state" widget="kanban_state_selection"/>
+                                    </div>
+                                  </t>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_kanban_inherit_no_group_create" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.view.kanban.inherit.no.group.create</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="inherit_id" ref="helpdesk_ticket_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="group_create">false</attribute>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_pivot_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.pivot.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Tickets">
+                <field name="stage_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_graph_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.graph.view</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <graph string="Tickets" type="bar">
+                <field name="create_date" interval="month" type="col"/>
+                <field name="stage_id"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <!-- Feature Requests -->
+<!--
+    <record id="project_feature_tree_view" model="ir.ui.view">
+        <field name="name">helpdesk_lite.ticket.tree.view.featured</field>
+        <field name="model">helpdesk_lite.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Feature Tracker Tree" decoration-bf="message_needaction==True">
+                <field name="id"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="name" string="Feature description"/>
+                <field name="partner_id"/>
+                <field name="priority" string="Priority"/>
+                <field name="user_id"/>
+                <field name="stage_id" widget="selection" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+-->
+
+    <record id="act_helpdesk_lite_ticket_all" model="ir.actions.act_window">
+        <field name="res_model">helpdesk_lite.ticket</field>
+        <field name="view_type">form</field>
+        <field name="name">Tickets</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph,pivot</field>
+        <field name="context">{
+            }
+        </field>
+        <field name="help" type="html">
+            <p>
+                The Odoo tickets tracker allows you to efficiently manage things
+                like internal requests, software development bugs, customer
+                complaints, project troubles, material breakdowns, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_view_tickets" model="ir.actions.act_window">
+        <field name="res_model">helpdesk_lite.ticket</field>
+        <field name="view_type">form</field>
+        <field name="name">Tickets</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="help" type="html">
+            <p>
+                The Odoo tickets tracker allows you to efficiently manage things
+                like internal requests, software development bugs, customer
+                complaints, project troubles, material breakdowns, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_categ_act0" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk_lite.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain" eval=""/>
+        <field name="context">{'search_default_my_tickets': 1}</field>
+        <field name="search_view_id" ref="view_helpdesk_ticket_filter"/>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('helpdesk_ticket_kanban_view')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('helpdesk_ticket_tree_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('helpdesk_ticket_form_view')}),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('helpdesk_ticket_graph_view')}),
+                          ]"/>
+        <!--(0, 0, {'view_mode': 'calendar', 'view_id': ref('helpdesk_ticket_calendar_view')}),-->
+        <field name="help" type="html">
+            <p>
+                The Odoo ticket tracker allows you to efficiently manage things
+                like internal requests, software development bugs, customer
+                complaints, project troubles, material breakdowns, etc.
+            </p>
+        </field>
+    </record>
+
+    <!-- Top menu item -->
+
+    <menuitem name="Helpdesk" id="menu_root" action="helpdesk_ticket_categ_act0"/>
+
+
+    <!-- menu categories -->
+
+<!--    <menuitem name="Dashboard" id="menu_dash" parent="menu_root" sequence="0"/>-->
+<!--    <menuitem name="Search" id="menu_tickets" parent="menu_root" sequence="10"/>-->
+    <menuitem name="Tickets" id="menu_tickets_act" parent="menu_root"  sequence="10" action="helpdesk_ticket_categ_act0"/>
+    <menuitem name="Configuration" id="menu_config" parent="menu_root" sequence="40" groups="base.group_system"/>
+
+    <!-- actions -->
+
+</odoo>
