@@ -13,7 +13,7 @@ tickets management application
 ![odoo12 - screenshot](screenshots/interface_create_ticket.png)
 
 #### Modify a ticket
-![odoo12 - screenshot](screenshots/changement l'etat d'une réclamation.PNG)
+![odoo12 - screenshot](screenshots/changement_l'etat_d'une_réclamation.PNG)
 
 #### comment on a ticket
 ![odoo12 - screenshot](screenshots/interface_commenter_réclamation.png)
